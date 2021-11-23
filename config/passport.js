@@ -12,7 +12,7 @@ dotenv.config();
 // const __dirname = dirname(fileURLToPath(import.meta.url));
 // const pathToKey = path.join(__dirname, 'rsa-key/public.pem');
 // const PUBLIC_KEY = fs.readFileSync(pathToKey, 'utf8');
-const PUBLIC_KEY = process.env.PUBLIC_KEY;
+const PUBLIC_KEY = process.env.JWT_PUBLIC_KEY.replace(/\\n/gm, "\n");
 
 export default function passportConfig(passport) {
     // Function defined in use is called when 'passport.authenticate()' is called with the name as a parameter.
@@ -83,7 +83,7 @@ export default function passportConfig(passport) {
     passport.use(
         new JwtStrategy(
             {
-                jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+                jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("Bearer"),
                 secretOrKey: PUBLIC_KEY,
                 algorithms: ["RS256"],
             },
